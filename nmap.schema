@@ -1,0 +1,28 @@
+CREATE TABLE scans(
+	scan_id INTEGER PRIMARY KEY,
+	start_ts TEXT UNIQUE
+)
+
+CREATE TABLE hosts(
+	host_id INTEGER PRIMARY KEY,
+	scan_id INTEGER,
+	ip_address VARCHAR(45),
+	host_name TEXT,
+	status TEXT,
+	start_ts TEXT,
+	end_ts TEXT
+	FOREIGN KEY(scan_id) REFERENCES hosts(scan_id)
+);
+
+CREATE INDEX ip_address ON hosts (ip_address);
+
+CREATE TABLE ports(
+	port_id INTEGER PRIMARY KEY,
+	host_id INTEGER,
+	number INTEGER,
+	status TEXT,
+	reason TEXT,
+	FOREIGN KEY(host_id) REFERENCES hosts(host_id)
+);
+
+CREATE INDEX host_id_idx ON ports (host_id);

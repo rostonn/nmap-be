@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Upload File</h1>
+    <form id="the-form" action="/upload" enctype="multipart/form-data">
+        <input id="the-file" name="file" type="file">
+        <input type="submit" value="Upload" />
+    </form>
+
+</body>
+
+<script>
+    var form = document.getElementById('the-form');
+    form.onsubmit = function () {
+        console.log("Submitting form ...")
+        var fileInput = document.getElementById('the-file');
+        var file = fileInput.files[0];
+        var formData = new FormData();
+        formData.append('file', file);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "/up", true);
+        // xhr.setRequestHeader("Content-Type", "multipart/form-data")
+        xhr.send(formData)
+
+        // // Add any event handlers here...
+        // xhr.open('POST', "/upload", true);
+        // xhr.setRequestHeader("Content-Type", "multipart/form-data") 
+        // xhr.send(formData);
+
+        return false; // To avoid actual submission of the form
+    }
+</script>
+
+</html>

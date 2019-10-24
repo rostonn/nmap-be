@@ -1,0 +1,4 @@
+{
+    "dbPath": "nmap.db",
+    "port": ":8080"
+}

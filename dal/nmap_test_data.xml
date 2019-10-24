@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/local/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.70 scan initiated Fri Apr 20 12:36:44 2018 as: nmap -Pn -p80,443,8443,5000,8080 -iL ips.txt -oA nmap.results -vvvvv -->
+<nmaprun scanner="nmap" args="nmap -Pn -p80,443,8443,5000,8080 -iL ips.txt -oA nmap.results -vvvvv" start="1524242204" startstr="Fri Apr 20 12:36:44 2018" version="7.70" xmloutputversion="1.04">
+	<scaninfo type="connect" protocol="tcp" numservices="5" services="80,443,5000,8080,8443" />
+	<verbose level="5" />
+	<debugging level="0" />
+	<taskbegin task="Parallel DNS resolution of 40 hosts." time="1524242204" />
+	<taskend task="Parallel DNS resolution of 40 hosts." time="1524242214" />
+	<taskbegin task="Connect Scan" time="1524242214" />
+	<taskend task="Connect Scan" time="1524242218" extrainfo="200 total ports" />
+	<host starttime="1524242214" endtime="1524242216">
+		<status state="up" reason="user-set" reason_ttl="0" />
+		<address addr="81.107.115.203" addrtype="ipv4" />
+		<hostnames>
+			<hostname name="cpc123026-glen5-2-0-cust970.2-1.cable.virginm.net" type="PTR" />
+		</hostnames>
+		<ports>
+			<port protocol="tcp" portid="80">
+				<state state="open" reason="syn-ack" reason_ttl="0" />
+				<service name="http" method="table" conf="3" />
+			</port>
+			<port protocol="tcp" portid="443">
+				<state state="open" reason="syn-ack" reason_ttl="0" />
+				<service name="https" method="table" conf="3" />
+			</port>
+			<port protocol="tcp" portid="5000">
+				<state state="filtered" reason="no-response" reason_ttl="0" />
+				<service name="upnp" method="table" conf="3" />
+			</port>
+			<port protocol="tcp" portid="8080">
+				<state state="filtered" reason="no-response" reason_ttl="0" />
+				<service name="http-proxy" method="table" conf="3" />
+			</port>
+			<port protocol="tcp" portid="8443">
+				<state state="filtered" reason="no-response" reason_ttl="0" />
+				<service name="https-alt" method="table" conf="3" />
+			</port>
+		</ports>
+		<times srtt="178708" rttvar="108359" to="612144" />
+	</host>
+	<runstats>
+		<finished time="1524242218" timestr="Fri Apr 20 12:36:58 2018" elapsed="13.95" summary="Nmap done at Fri Apr 20 12:36:58 2018; 40 IP addresses (40 hosts up) scanned in 13.95 seconds" exit="success" />
+		<hosts up="40" down="0" total="40" />
+	</runstats>
+</nmaprun>
+
