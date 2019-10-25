@@ -28,7 +28,7 @@ type Port struct {
 }
 
 // Insert Nmap XML Results
-func insertNmapResults(db *sql.DB, nmap dto.Nmap) (bool, error) {
+func InsertNmapResults(db *sql.DB, nmap dto.Nmap) (bool, error) {
 	// Save Scan First to see if this Nmap has already been saved
 	scanId, err := saveScan(db, nmap)
 	if err != nil {

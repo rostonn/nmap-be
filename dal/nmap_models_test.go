@@ -6,16 +6,17 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/rostonn/playground/fox/dto"
+	"github.com/rostonn/nmap-be/dto"
 
 	sqlmock "github.com/DATA-DOG/go-sqlmock"
 )
 
+// Test nmap models functions using mock db and mock nmap from xml file
 func TestMockDB(t *testing.T) {
 	nmap := loadNMap()
 	db, mock, err := sqlmock.New()
 	mock.ExpectBegin()
-	mock.ExpectExec("INSERT INTO scans").WillReturnError(fmt.Errorf("some error"))
+	mock.ExpectExec("SELECT").WillReturnError(fmt.Errorf("some error"))
 	mock.ExpectCommit()
 
 	// Save Scan should return 0, error
@@ -25,12 +26,13 @@ func TestMockDB(t *testing.T) {
 	}
 
 	//	Insert Map should return false and error
-	res, err := insertNmapResults(db, nmap)
+	res, err := InsertNmapResults(db, nmap)
 	if res != false && err != nil {
 		t.Errorf("Scan save error should return error")
 	}
 
 	db, mock, err = sqlmock.New()
+	// Insert returns id of 1 and 1 record that has been updated
 	mock.ExpectExec("INSERT INTO scans").WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectCommit()
 
@@ -40,6 +42,7 @@ func TestMockDB(t *testing.T) {
 	}
 }
 
+// Load NMap results for test
 func loadNMap() dto.Nmap {
 	data, err := ioutil.ReadFile("nmap_test_data.xml")
 	if err != nil {

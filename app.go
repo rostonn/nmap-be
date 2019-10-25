@@ -8,12 +8,14 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/rostonn/nmap-be/config"
+	"github.com/rostonn/nmap-be/dal"
 )
 
 type App struct {
-	Router *mux.Router
-	DB     *sql.DB
-	Config config.Configuration
+	Router         *mux.Router
+	DB             *sql.DB
+	Config         config.Configuration
+	NmapDalService dal.NmapServiceInterface
 }
 
 func (a *App) Initialize() {
@@ -27,6 +29,7 @@ func (a *App) Initialize() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	a.NmapDalService = &dal.NmapService{}
 
 	a.Router = mux.NewRouter()
 	a.initializeRoutes()
@@ -37,7 +40,7 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/up", a.uploadNmapResultsXmlFile).Methods("POST")
 
 	// Return list of nmpa results by ip address
-	a.Router.HandleFunc("/nmap-by-ip", a.getNmapResultsByIpAddress).Methods("GET")
+	a.Router.HandleFunc("/nmap-by-ip", a.getNmapResultsByIpAddress).Methods("POST")
 
 	a.Router.PathPrefix("/app/").Handler(http.StripPrefix("/app/", http.FileServer(http.Dir("./static/"))))
 }

@@ -1,6 +1,15 @@
 package dal
 
-import "database/sql"
+import (
+	"database/sql"
+	"fmt"
+)
+
+type NmapServiceInterface interface {
+	GetNmapResultsByIp(db *sql.DB, ipAddress string) ([]NmapResultsForFrontend, error)
+}
+
+type NmapService struct{}
 
 type NmapResultsForFrontend struct {
 	IPAddress string `json:"ipAddress"`
@@ -11,10 +20,10 @@ type NmapResultsForFrontend struct {
 	Status    string `json:"status"`
 }
 
-type NmapTableRow struct {
-}
+// getNmapResultsByIp - Query database based on ip address and return list of nmap scan data
+func (n *NmapService) GetNmapResultsByIp(db *sql.DB, ipAddress string) ([]NmapResultsForFrontend, error) {
+	fmt.Println("Real NMAP SERVICE")
 
-func getNmapResultsByIp(db *sql.DB, ipAddress string) ([]NmapResultsForFrontend, error) {
 	query := `SELECT h.ip_address, h.host_name, h.start_ts, 
 	h.end_ts, p.number, p.status FROM hosts h JOIN ports p ON h.host_id = p.host_id 
 	WHERE h.ip_address = ?`
@@ -23,14 +32,20 @@ func getNmapResultsByIp(db *sql.DB, ipAddress string) ([]NmapResultsForFrontend,
 
 	rows, err := db.Query(query, ipAddress)
 	if err != nil {
-		// Log error
-
+		// Log error if query failed
+		fmt.Printf("Error querying getNmapResultsByIp %s", err.Error())
 		return nmapResults, err
 	}
 
 	for rows.Next() {
 		nmapRow := NmapResultsForFrontend{}
-		err = rows.Scan()
+		err = rows.Scan(&nmapRow.IPAddress, &nmapRow.HostName,
+			&nmapRow.StartTs, &nmapRow.EndTs, &nmapRow.Port, &nmapRow.Status)
+		// Log error if scan failed
+		if err != nil {
+			fmt.Printf("Error parsing db row %s", err.Error())
+		}
+		nmapResults = append(nmapResults, nmapRow)
 	}
-
+	return nmapResults, nil
 }
