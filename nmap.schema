@@ -1,7 +1,7 @@
 CREATE TABLE scans(
 	scan_id INTEGER PRIMARY KEY,
 	start_ts TEXT UNIQUE
-)
+);
 
 CREATE TABLE hosts(
 	host_id INTEGER PRIMARY KEY,
@@ -10,7 +10,7 @@ CREATE TABLE hosts(
 	host_name TEXT,
 	status TEXT,
 	start_ts TEXT,
-	end_ts TEXT
+	end_ts TEXT,
 	FOREIGN KEY(scan_id) REFERENCES hosts(scan_id)
 );
 

@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <h1>Upload File</h1>
+    <h1>Upload NMAP XML File</h1>
     <form id="the-form" action="/upload" enctype="multipart/form-data">
         <input id="the-file" name="file" type="file">
         <input type="submit" value="Upload" />
@@ -20,7 +20,6 @@
 <script>
     var form = document.getElementById('the-form');
     form.onsubmit = function () {
-        console.log("Submitting form ...")
         var fileInput = document.getElementById('the-file');
         var file = fileInput.files[0];
         var formData = new FormData();
@@ -28,14 +27,17 @@
 
         var xhr = new XMLHttpRequest();
         xhr.open('POST', "/up", true);
-        // xhr.setRequestHeader("Content-Type", "multipart/form-data")
         xhr.send(formData)
 
-        // // Add any event handlers here...
-        // xhr.open('POST', "/upload", true);
-        // xhr.setRequestHeader("Content-Type", "multipart/form-data") 
-        // xhr.send(formData);
-
+        xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+                if(xhr.status == 500) {
+                    alert("Server Error - Scan may already be uploaded. Check server.")
+                } else {
+                    alert("message " + xhr.responseText+ " status " + xhr.status)
+                }
+            }
+        }
         return false; // To avoid actual submission of the form
     }
 </script>

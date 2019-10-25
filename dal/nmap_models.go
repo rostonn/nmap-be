@@ -8,6 +8,12 @@ import (
 	"github.com/rostonn/nmap-be/dto"
 )
 
+type NmapRepository interface {
+	InsertNmapResults(db *sql.DB, nmap dto.Nmap) (bool, error)
+}
+
+type NmapRepositoryImpl struct{}
+
 type Host struct {
 	HostID    int    `db:"host_id"`
 	ScanID    int    `db:"scan_id"`
@@ -28,7 +34,7 @@ type Port struct {
 }
 
 // Insert Nmap XML Results
-func InsertNmapResults(db *sql.DB, nmap dto.Nmap) (bool, error) {
+func (m *NmapRepositoryImpl) InsertNmapResults(db *sql.DB, nmap dto.Nmap) (bool, error) {
 	// Save Scan First to see if this Nmap has already been saved
 	scanId, err := saveScan(db, nmap)
 	if err != nil {
@@ -38,7 +44,6 @@ func InsertNmapResults(db *sql.DB, nmap dto.Nmap) (bool, error) {
 
 	dtoHosts := nmap.Hosts
 	for _, dtoHost := range dtoHosts {
-		fmt.Println(dtoHost)
 		// For each dtoHost, create a host
 		host := Host{}
 		host.ScanID = scanId
@@ -85,7 +90,7 @@ func saveScan(db *sql.DB, nmap dto.Nmap) (int, error) {
 }
 
 func saveHost(db *sql.DB, h Host) (int, error) {
-	statement := `INSERT INTO hosts (name, ip_address, status, start_ts, end_ts) VALUES (?,?,?,?,?)`
+	statement := `INSERT INTO hosts (host_name, ip_address, status, start_ts, end_ts) VALUES (?,?,?,?,?)`
 	res, err := db.Exec(statement, h.Name, h.IPAddress, h.Status, h.StartTs, h.EndTs)
 	if err != nil {
 		return 0, err

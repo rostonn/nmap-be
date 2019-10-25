@@ -22,7 +22,6 @@ type NmapResultsForFrontend struct {
 
 // getNmapResultsByIp - Query database based on ip address and return list of nmap scan data
 func (n *NmapService) GetNmapResultsByIp(db *sql.DB, ipAddress string) ([]NmapResultsForFrontend, error) {
-	fmt.Println("Real NMAP SERVICE")
 
 	query := `SELECT h.ip_address, h.host_name, h.start_ts, 
 	h.end_ts, p.number, p.status FROM hosts h JOIN ports p ON h.host_id = p.host_id 
